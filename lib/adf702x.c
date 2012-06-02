@@ -17,7 +17,8 @@ static const uint32_t adf7020_1_regs[] = {
 	0x800f00d2, //r2
 };
 
-#define PA_ON 0x5a << 8
+//#define PA_ON 0x5a << 8
+#define PA_ON 0x48 << 8  //0dbm
 
 unsigned char ShiftReg;
 
