@@ -1,6 +1,7 @@
 #include  <msp430x16x.h>
 #include "morse.h"
 #include "adf702x.h"
+#include "global.h"
 
 char uart_buffer[255];
 

@@ -9,8 +9,7 @@
 #define MORSE_H_
 
 #include  <msp430x16x.h>
-
-#define uint8_t unsigned char
+#include "global.h"
 
 void ascii(char c);
 

@@ -9,6 +9,7 @@
 #define I2C_H_
 
 #include  <msp430x16x.h>
+#include "global.h"
 
 void I2C_master_init2();
 void I2C_slave_init2(unsigned char address);

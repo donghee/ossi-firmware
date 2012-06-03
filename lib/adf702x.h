@@ -9,10 +9,7 @@
 #define RF_H_
 
 #include  <msp430x16x.h>
-
-#define uint32_t unsigned long
-//#define uint16_t unsigned short
-#define uint8_t unsigned char
+#include "global.h"
 
 void adf7020_1_init(void);
 void adf7020_1_sendStart(void);
@@ -39,10 +36,6 @@ void adf7021n_recvStart(void);
 #define SYNC_WORD2 0x91                // Second byte of sync word
 
 #define HEADER_SIZE     4       // 4 bytes header
-
-// Macros for turning on and off the LEDs (for testing only)
-#define FALSE 0
-#define TRUE (!FALSE)
 
 #define ON  TRUE
 #define OFF FALSE

@@ -9,6 +9,7 @@
 #define I2C_H_
 
 #include  <msp430x16x.h>
+#include "global.h"
 
 void InitI2C();
 void I2CWriteInit();

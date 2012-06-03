@@ -10,6 +10,7 @@
 
 #include  <msp430x16x.h>
 #include "i2c.h"
+#include "global.h"
 
 void EEPROM_ByteWrite(unsigned int Address, unsigned char Data);
 void EEPROM_AckPolling();
