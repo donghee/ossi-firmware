@@ -5,7 +5,7 @@ int PtrTransmit;
 
 
 /*---------------------------------------------------------------------------*/
-void InitI2C(void)
+void InitI2C(uint8_t slave_address)
 // Description:
 //   Initialization of the I2C Module
 {
@@ -20,7 +20,7 @@ void InitI2C(void)
                                 //   7-bit addressing, no DMA, no feedback
   I2CTCTL = I2CTRX+I2CSSEL_2;   // byte mode, repeat mode, clock source = SMCLK,
                                 // transmit mode
-  I2CSA = 0x50;         // define Slave Address
+  I2CSA = slave_address;         // define Slave Address
                                 // In this case the Slave Address defines the
                                 // control byte that is sent to the EEPROM.
 //  I2CPSC = 0x00;                // I2C clock = clock source/1
@@ -53,25 +53,25 @@ void I2CReadInit(void)
 }
 
 ////// I2C Interrupt Vector (I2CIV) handler
-//#pragma vector=USART0TX_VECTOR
-//__interrupt void USART0 (void)
-//{
-//  switch( I2CIV )
-//  {
-//  case 10:
-//  {
-//      I2CBuffer[0]=I2CDRB;   // store received data in buffer
-//      break;
-//  }
-//   case 12:
-//   {
-//    I2CDRB = I2CBuffer[PtrTransmit];
-//    PtrTransmit = PtrTransmit-1;
-//    if (PtrTransmit <0)
-//    {
-//    	I2CIE &= ~TXRDYIE;        // disable interrupts
-//    }
-//    break;
-//    }
-//  }
-//}
+#pragma vector=USART0TX_VECTOR
+__interrupt void USART0 (void)
+{
+  switch( I2CIV )
+  {
+  case 10:
+  {
+      I2CBuffer[0]=I2CDRB;   // store received data in buffer
+      break;
+  }
+   case 12:
+   {
+    I2CDRB = I2CBuffer[PtrTransmit];
+    PtrTransmit = PtrTransmit-1;
+    if (PtrTransmit <0)
+    {
+    	I2CIE &= ~TXRDYIE;        // disable interrupts
+    }
+    break;
+    }
+  }
+}

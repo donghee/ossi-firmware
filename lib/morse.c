@@ -3,8 +3,8 @@
 
 //uint8_t done = 0b10000000;
 uint8_t done = 0x80;
-
 uint8_t output_pin;
+
 
 void delay(void)
 {
@@ -17,25 +17,22 @@ void delay(void)
 void mark(uint8_t t)
 {
 	volatile unsigned int i;
-//	P5OUT |= BIT0;
 	adf7020_1_ook(1);
-	P6OUT &= ~0x01;
+	LED_ON();
 	for(i = 0; i < t; i++)
 	{                         // Turn On
 		delay();
 	}
-//	P5OUT &= ~BIT0;
 	adf7020_1_ook(0);
-	P6OUT |= 0x01;                          // Turn Off
+	LED_OFF();
 	delay();
 }
 
 void space(uint8_t t)
 {
 	volatile unsigned int i;
-//	P5OUT &= ~BIT0;
 	adf7020_1_ook(0);
-	P6OUT |= 0x01;
+	LED_OFF();
 
 	for(i = 0; i < t; i++)
 	{

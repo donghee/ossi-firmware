@@ -11,7 +11,7 @@
 #include  <msp430x16x.h>
 #include "global.h"
 
-void InitI2C();
+void InitI2C(uint8_t slave_address);
 void I2CWriteInit();
 void I2CReadInit();
 

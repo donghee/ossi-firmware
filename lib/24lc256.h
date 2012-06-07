@@ -16,6 +16,7 @@ void EEPROM_ByteWrite(unsigned int Address, unsigned char Data);
 void EEPROM_AckPolling();
 unsigned char EEPROM_RandomRead(unsigned int Address);
 unsigned char EEPROM_CurrentAddressRead();
+void EEPROM_Init(uint8_t slave_address);
 
 
 #endif /* 24LC256_H_ */

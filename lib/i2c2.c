@@ -47,32 +47,32 @@ void I2C_read_init2(void)
   PtrReceive2 = 0;
 }
 
-//// I2C Interrupt Vector (I2CIV) handler
-#pragma vector=USART0TX_VECTOR
-__interrupt void USART0 (void)
-{
-  switch( I2CIV )
-  {
-  case 10:
-  {
-      I2CBuffer2[PtrReceive2]=I2CDRB;   // store received data in buffer
-      PtrReceive2++;
-      if (PtrReceive2 > 1)
-      {
-    	  P6OUT ^= BIT0;
-    	  PtrReceive2 = 0;
-      }
-      break;
-  }
-   case 12:
-   {
-    I2CDRB = I2CBuffer2[PtrTransmit2];
-    PtrTransmit2 = PtrTransmit2-1;
-    if (PtrTransmit2 <0)
-    {
-    	I2CIE &= ~TXRDYIE;        // disable interrupts
-    }
-    break;
-    }
-  }
-}
+////// I2C Interrupt Vector (I2CIV) handler
+//#pragma vector=USART0TX_VECTOR
+//__interrupt void USART0 (void)
+//{
+//  switch( I2CIV )
+//  {
+//  case 10:
+//  {
+//      I2CBuffer2[PtrReceive2]=I2CDRB;   // store received data in buffer
+//      PtrReceive2++;
+//      if (PtrReceive2 > 1)
+//      {
+//    	  P6OUT ^= BIT0;
+//    	  PtrReceive2 = 0;
+//      }
+//      break;
+//  }
+//   case 12:
+//   {
+//    I2CDRB = I2CBuffer2[PtrTransmit2];
+//    PtrTransmit2 = PtrTransmit2-1;
+//    if (PtrTransmit2 <0)
+//    {
+//    	I2CIE &= ~TXRDYIE;        // disable interrupts
+//    }
+//    break;
+//    }
+//  }
+//}

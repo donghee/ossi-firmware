@@ -1,6 +1,11 @@
 #include "24lc256.h"
 #include "i2c.h"
 
+void EEPROM_Init(uint8_t slave_address)
+{
+	InitI2C(slave_address);
+}
+
 /*---------------------------------------------------------------------------*/
 void EEPROM_ByteWrite(unsigned int Address, unsigned char Data)
 // Description:
