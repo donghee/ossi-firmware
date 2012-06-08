@@ -2,7 +2,7 @@
 
 unsigned char I2CBuffer[3];
 int PtrTransmit;
-
+int PtrReceive;
 
 /*---------------------------------------------------------------------------*/
 void InitI2C(uint8_t slave_address)
@@ -52,7 +52,7 @@ void I2CReadInit(void)
   I2CIE = RXRDYIE;        // enable Receive ready interrupt
 }
 
-////// I2C Interrupt Vector (I2CIV) handler
+//// I2C Interrupt Vector (I2CIV) handler
 #pragma vector=USART0TX_VECTOR
 __interrupt void USART0 (void)
 {
@@ -60,7 +60,13 @@ __interrupt void USART0 (void)
   {
   case 10:
   {
-      I2CBuffer[0]=I2CDRB;   // store received data in buffer
+
+      I2CBuffer[PtrReceive]=I2CDRB;   // store received data in buffer
+      PtrReceive = PtrReceive-1;
+      if (PtrReceive < 0)
+      {
+    	  I2CIE &= ~RXRDYIE;        // disable interrupts
+      }
       break;
   }
    case 12:

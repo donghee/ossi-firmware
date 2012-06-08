@@ -14,8 +14,8 @@
 #define LED_PORT           1
 #define LED_PIN            1
 
-#define LED_ON()           IO_SET(LED,HIGH);
-#define LED_OFF()           IO_SET(LED,LOW);
+#define LED_ON()           IO_SET(LED,HIGH)
+#define LED_OFF()           IO_SET(LED,LOW)
 
 void ascii(char c);
 

@@ -6,49 +6,48 @@
  (  <_> )\___ \  \___ \ |  | /_____/  |   |
   \____//____  >/____  >|__|          |___|
             \/      \/
-  
-  _____ _____ ______ 
+
+  _____ _____ ______
  |  _  /  __ \| ___ \
  | | | | /  \/| |_/ /
  | | | | |    | ___ \
  \ \_/ / \__/\| |_/ /
-  \___/ \____/\____/ 
-                     
+  \___/ \____/\____/
+
 *  Created on: 2012. 6. 3.
 *
 *
 */
 
+
 #include <msp430.h>
+#include "morse.h"
+#include "config.h"
 #include "24lc256.h"
 
-
-char message[255] = {'h','e','l','l','o',' ','o','s','s','i',' ', '1'};
-
-void configure_clock() {
-	BCSCTL1 |= RSEL0 + RSEL1 + RSEL2;
-	DCOCTL = DCO0 + DCO1 + DCO2;
-	BCSCTL2 |= SELM_0 + DIVM_0;
-}
+char message[255] = {'1','2','3','l','o',' ','o','s','s','i',' ', '1'};
 
 int main(void) {
 	volatile unsigned int i;
     volatile unsigned char x;
+    volatile uint16_t temp;
+    WDTCTL = WDTPW + WDTHOLD;                 // Stop watchdog timer
 
-	WDTCTL = WDTPW + WDTHOLD;		// Stop watchdog timer
+    EEPROM_Init(EEPROM_ADDR);
 
-	EEPROM_Init(0x50); // 1010 000 eeprom
-
-	for(i=0; i < 12;i++ ) {
+	for(i=0; i < 1;i++ ) {
 		  ascii(message[i]);
-		  x= EEPROM_ByteWrite(i, message[i]);
+		  EEPROM_ByteWrite(i, message[i]);
 		  EEPROM_AckPolling();
 	}
-	infinite_blink();
 
-	  for(i=0; i < 12;i++ ) {
-	  	  x = EEPROM_RandomRead(i);
-	  	  ascii(x);
-	  }
+	for(i=0; i < 1;i++ ) {
+		  x=EEPROM_RandomRead(i);
+		  ascii(x);
+	}
+
+    TMP10x_Init(OBCTEMP_ADDR);
+    temp = TMP10x_Read(); // C = temp / 0x10
+    infinite_blink();
  }
 

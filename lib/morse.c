@@ -5,7 +5,6 @@
 uint8_t done = 0x80;
 uint8_t output_pin;
 
-
 void delay(void)
 {
     volatile unsigned int i;
@@ -18,13 +17,14 @@ void mark(uint8_t t)
 {
 	volatile unsigned int i;
 	adf7020_1_ook(1);
+//	P1OUT &= ~BIT1;
 	LED_ON();
 	for(i = 0; i < t; i++)
 	{                         // Turn On
 		delay();
 	}
 	adf7020_1_ook(0);
-	LED_OFF();
+	LED_OFF();                          // Turn Off
 	delay();
 }
 
@@ -51,7 +51,7 @@ void morse(uint8_t m)
 
 
 void ascii(char c) {
-
+	P1DIR |= BIT1;
 	uint8_t number_code[] = {
 // 		0b11111100,	0b01111100, 0b00111100, 0b00011100, 0b00001100, 0b00000100,
 // 		0b10000100, 0b11000100, 0b11100100, 0b11110100 // 0-9

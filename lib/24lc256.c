@@ -3,6 +3,7 @@
 
 void EEPROM_Init(uint8_t slave_address)
 {
+	 _EINT();
 	InitI2C(slave_address);
 }
 
@@ -90,6 +91,7 @@ unsigned char EEPROM_RandomRead(unsigned int Address)
   while ((~I2CIFG)&ARDYIFG);  // wait untill transmission is finished
   I2CReadInit();
   I2CNDAT = 1;         // 1 byte should be received
+  PtrReceive = 0;
 
   I2CIFG &= ~ARDYIFG;         // clear Access ready interrupt flag
   I2CTCTL |= I2CSTT+I2CSTP;   // start receiving and finally generate
