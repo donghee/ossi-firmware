@@ -17,6 +17,6 @@ void I2CReadInit();
 
 extern unsigned char I2CBuffer[3];
 extern int PtrTransmit;
-
+extern int PtrReceive;
 
 #endif /* I2C_H_ */
