@@ -23,8 +23,8 @@ uint16_t TMP10x_Read()
   I2CNDAT = 1;
   I2CIFG &= ~ARDYIFG;
   I2CTCTL |= I2CSTT;
+  while ((~I2CIFG)&ARDYIFG);  // wait untill transmission is finished
 
-    while ((~I2CIFG)&ARDYIFG);  // wait untill transmission is finished
   I2CReadInit();
   I2CNDAT = 2;         // 2 byte should be received
   PtrReceive = 1;
