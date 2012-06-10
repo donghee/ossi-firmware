@@ -13,7 +13,8 @@ uint16_t TMP10x_Read()
   uint8_t point_register;
   uint16_t tempature;
 
-  while (I2CDCTL&I2CBUSY);  // wait until I2C module has finished all operations
+//  while (I2CDCTL&I2CBUSY);  // wait until I2C module has finished all operations
+  while (I2CDCTL&I2CBB);
 
   point_register = 0; // Temperature Register
   I2CBuffer[0] = point_register;

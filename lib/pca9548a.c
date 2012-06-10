@@ -17,11 +17,11 @@ void PCA9548A_Init(uint8_t slave_address)
 	InitI2C(slave_address);
 }
 
-
 void PCA9548A_SetChannel(uint8_t channel)
 {
   uint8_t control_register;
 
+  while (I2CDCTL&I2CBB);
   control_register = 1 << channel; // select channel
   I2CBuffer[0] = control_register;
   PtrTransmit = 0;
@@ -30,17 +30,3 @@ void PCA9548A_SetChannel(uint8_t channel)
   I2CNDAT = 1;
   I2CTCTL |= I2CSTT+I2CSTP;   // start and stop condition generation
 }
-
-//
-//uint8_t PCA9548A_GetChannel()
-//{
-//  while (I2CDCTL&I2CBUSY);  // wait until I2C module has finished all operations
-//
-//  I2CReadInit();
-//  I2CNDAT = 1;
-//  PtrReceive = 0;
-//  I2CIFG &= ~ARDYIFG;         // clear Access ready interrupt flag
-//  I2CTCTL |= I2CSTT+I2CSTP;
-//  while ((~I2CIFG)&ARDYIFG);  // wait until transmission is finished
-//  return I2CBuffer[0];
-//}

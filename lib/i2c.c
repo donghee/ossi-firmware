@@ -4,11 +4,15 @@ unsigned char I2CBuffer[3];
 int PtrTransmit;
 int PtrReceive;
 
+int NACK_Count;
+
 /*---------------------------------------------------------------------------*/
 void InitI2C(uint8_t slave_address)
 // Description:
 //   Initialization of the I2C Module
 {
+  NACK_Count =0;
+
   P3SEL = 0x0A;          // select module function for the used I2C pins
   P3DIR &= ~0x0A;
 
@@ -29,6 +33,7 @@ void InitI2C(uint8_t slave_address)
   I2CSCLH = 0x03;               // SCL high period = 5*I2C clock
   I2CSCLL = 0x03;               // SCL low period  = 5*I2C clock
   U0CTL |= I2CEN;        // (4) set I2CEN via software
+
 }
 
 
@@ -59,7 +64,10 @@ __interrupt void I2C_ISR (void)
   switch( I2CIV )
   {
   case  2: break;                          // Arbitration lost
-  case  4: break;                          // No Acknowledge
+  case  4:
+  {
+	  break;                          // No Acknowledge
+  }
   case  6: break;                          // Own Address
   case  8: break;                          // Register Access Ready
   case 10:

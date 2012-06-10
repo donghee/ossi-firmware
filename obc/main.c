@@ -60,16 +60,31 @@ void test_panneltemp()
     volatile uint16_t temp;
     volatile uint8_t x;
 
-    PCA9548A_Init(0x70);
+    PCA9548A_Init(PCA9548A_ADDR);
+    PCA9548A_SetChannel(PCA9548A_CH_PANELTEMP);
+
+ 	TMP10x_Init(PANELTEMP_ADDR);
+    temp = TMP10x_Read(); // C = temp / 0x10
+    temp = temp+1;
+    if ((temp/16) > 28)
+    	LED_ON();
+    else
+    	LED_OFF();
+}
+
+void test_payload()
+{
+	PCA9548A_Init(PCA9548A_ADDR);
     PCA9548A_SetChannel(2);
 
-// 	TMP10x_Init(PANELTEMP_ADDR);
-//    temp = TMP10x_Read(); // C = temp / 0x10
-//    temp = temp+1;
-//    if ((temp/16) > 28)
-//    	LED_ON();
-//    else
-//    	LED_OFF();
+//    I2C_PAYLOAD_Init(0x48);
+    while(1) {
+    I2C_PAYLOAD_Init(0x48);
+    I2C_PAYLOAD_Write(0x00);
+    _blink();
+    I2C_PAYLOAD_Write(0x01);
+    _blink();
+    }
 }
 
 int main(void) {
@@ -80,9 +95,10 @@ int main(void) {
 //    test_eeprom();
 //    test_tmp101();
 //
-    while(1) {
-    	test_panneltemp();
-    }
+    test_payload();
+//    while(1) {
+//    	test_panneltemp();
+//    }
 
-    infinite_blink();
+//    infinite_blink();
 }
