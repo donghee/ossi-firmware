@@ -22,8 +22,6 @@ void PCA9548A_SetChannel(uint8_t channel)
 {
   uint8_t control_register;
 
-  while (I2CDCTL&I2CBUSY);  // wait until I2C module has finished all operations
-
   control_register = 1 << channel; // select channel
   I2CBuffer[0] = control_register;
   PtrTransmit = 0;

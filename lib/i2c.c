@@ -54,10 +54,14 @@ void I2CReadInit(void)
 
 //// I2C Interrupt Vector (I2CIV) handler
 #pragma vector=USART0TX_VECTOR
-__interrupt void USART0 (void)
+__interrupt void I2C_ISR (void)
 {
   switch( I2CIV )
   {
+  case  2: break;                          // Arbitration lost
+  case  4: break;                          // No Acknowledge
+  case  6: break;                          // Own Address
+  case  8: break;                          // Register Access Ready
   case 10:
   {
 
@@ -73,11 +77,14 @@ __interrupt void USART0 (void)
    {
     I2CDRB = I2CBuffer[PtrTransmit];
     PtrTransmit = PtrTransmit-1;
+
     if (PtrTransmit <0)
     {
     	I2CIE &= ~TXRDYIE;        // disable interrupts
     }
     break;
     }
+   case 14: break;                          // General Call
+   case 16: break;                          // Start Condition
   }
 }

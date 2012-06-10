@@ -61,7 +61,7 @@ void test_panneltemp()
     volatile uint8_t x;
 
     PCA9548A_Init(0x70);
-    PCA9548A_SetChannel(3);
+    PCA9548A_SetChannel(2);
 
 // 	TMP10x_Init(PANELTEMP_ADDR);
 //    temp = TMP10x_Read(); // C = temp / 0x10
