@@ -8,7 +8,8 @@ uint8_t output_pin;
 void delay(void)
 {
     volatile unsigned int i;
-    i = 10000;                              // Delay
+//    i = 10000;                              // Delay
+    i = 5000;                              // Delay
     do (i--);
     while (i != 0);
 }

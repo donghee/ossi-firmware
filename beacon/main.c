@@ -34,17 +34,21 @@ void configure_clock() {
 int main(void) {
 	volatile unsigned int i;
 	WDTCTL = WDTPW + WDTHOLD;		// Stop watchdog timer
-	P6DIR |= 0x01;					// Set P1.0 to output direction
-//	configure_clock();
+	P1DIR |= BIT1;					// Set P1.0 to output direction
+	// configure_clock();
+	// default 4MHZ?
 
 	adf7020_1_init();
 	adf7020_1_sendStart();
 
-	for(;;) {
-		  for(i=0; i < step-1;i++ ) {
-			  ascii(message[i]);
-		  }
+	while(1)
+		adf7020_1_ook(1);
 
+	for(;;) {
+//		  for(i=0; i < step-1;i++ ) {
+//			  ascii(message[i]);
+//		  }
 	}
+
 }
 

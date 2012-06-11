@@ -25,6 +25,7 @@
 #include "config.h"
 #include "24lc256.h"
 #include "pca9548a.h"
+#include "adc.h"
 
 char message[255] = {'1','2','3','l','o',' ','o','s','s','i',' ', '1'};
 
@@ -77,14 +78,47 @@ void test_payload()
 	PCA9548A_Init(PCA9548A_ADDR);
     PCA9548A_SetChannel(2);
 
-//    I2C_PAYLOAD_Init(0x48);
+    Payload_Init();
     while(1) {
-    I2C_PAYLOAD_Init(0x48);
-    I2C_PAYLOAD_Write(0x00);
-    _blink();
-    I2C_PAYLOAD_Write(0x01);
-    _blink();
+		Payload_Light_Off();
+		_delay();
+		Payload_Light_On();
+		_delay();
     }
+
+}
+
+void test_payload_with_tmp100()
+{
+    volatile uint16_t temp;
+    volatile uint8_t x;
+
+    PCA9548A_Init(PCA9548A_ADDR);
+    PCA9548A_SetChannel(PCA9548A_CH_PANELTEMP);
+
+ 	TMP10x_Init(PANELTEMP_ADDR);
+    temp = TMP10x_Read(); // C = temp / 0x10
+    temp = temp+1;
+
+	PCA9548A_Init(PCA9548A_ADDR);
+    PCA9548A_SetChannel(2);
+
+    Payload_Init();
+
+    	if ((temp/16) > 29)
+    		Payload_Light_On();
+    	else
+    		Payload_Light_Off();
+		_delay();
+
+}
+
+void test_adc(void)
+{
+    volatile uint16_t v;
+
+    v = ADC_Get_Voltage(VBUS);
+    v = v+1;
 }
 
 int main(void) {
@@ -94,8 +128,13 @@ int main(void) {
     three_blink();
 //    test_eeprom();
 //    test_tmp101();
-//
-    test_payload();
+//    test_payload();
+//    while(1)
+//    	test_payload_with_tmp100();
+
+    while(1)
+    	test_adc();
+
 //    while(1) {
 //    	test_panneltemp();
 //    }

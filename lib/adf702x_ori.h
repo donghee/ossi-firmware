@@ -20,6 +20,8 @@ unsigned char adf7021n_get_mode(void);
 void adf7021n_sendStart(void);
 void adf7021n_recvStart(void);
 
+
+
 #define IDLE 0
 #define TX 1
 #define RX 2
@@ -39,6 +41,8 @@ void adf7021n_recvStart(void);
 #define OFF FALSE
 
 #define adf702x_data       (adf702x_buf + 3)
+
+
 
 
 #endif /* RF_H_ */

@@ -23,8 +23,13 @@
 
 #include <msp430.h>				
 #include "morse.h"
+#include "payload.h"
 
-char RXData = 0;
+int PtrReceive=0;
+
+uint8_t cmd;
+uint8_t length;
+uint8_t data;
 
 int I2C_Slave_Init(uint16_t address)
 {
@@ -52,6 +57,33 @@ int main(void) {
 	}
 }
 
+void parse_command(uint8_t i2c_data)
+{
+	  if (PtrReceive == 0) {
+		  cmd = i2c_data;
+	  }
+	  if (PtrReceive == 1) {
+		  length = i2c_data;
+	  }
+	  if (PtrReceive == 2)
+	  {
+		  data = i2c_data; //TODO: It just one byte.
+	  }
+
+	  if (PtrReceive == length+1)
+	  {
+	      if (data == 0) {
+	    	  LED_OFF();
+	      }
+	      if (data == 1) {
+	    	  LED_ON();
+	      }
+	      PtrReceive = -1;
+	  }
+
+	  PtrReceive = PtrReceive+1;
+}
+
 
 // Common ISR for I2C Module
 #pragma vector=USART0TX_VECTOR
@@ -64,13 +96,16 @@ __interrupt void I2C_ISR(void)
    case  6: break;                          // Own Address
    case  8: break;                          // Register Access Ready
    case 10:                                 // Receive Ready
-      RXData = I2CDRB;                      // RX data
-      if (RXData > 0) {
-    	  LED_ON();
-      }else {
-    	  LED_OFF();
-      }
-     _BIC_SR_IRQ(CPUOFF);                   // Clear LPM0
+	  parse_command(I2CDRB);
+	  break;
+//
+//      RXData = I2CDRB;                      // RX data
+//      if (RXData > 0) {
+//    	  LED_ON();
+//      }else {
+//    	  LED_OFF();
+//      }
+//     _BIC_SR_IRQ(CPUOFF);                   // Clear LPM0
      break;
    case 12:  break;                         // Transmit Ready
    case 14: break;                          // General Call

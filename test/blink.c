@@ -4,12 +4,16 @@
 #define LED_PORT           1
 #define LED_PIN            1
 
-void _blink() {
+void _delay() {
 	volatile unsigned int i;	// volatile to prevent optimization
-    IO_SET(LED,TOGGLE);
 	i = 10000;					// SW Delay
 	do i--;
 	while(i != 0);
+}
+
+void _blink() {
+    IO_SET(LED,TOGGLE);
+    _delay();
 }
 
 void infinite_blink() {
