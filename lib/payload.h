@@ -8,7 +8,7 @@
 #ifndef PAYLOAD_H_
 #define PAYLOAD_H_
 
-#include  <msp430x16x.h>
+#include  <msp430.h>
 #include "global.h"
 
 typedef enum {
