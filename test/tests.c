@@ -1,31 +1,5 @@
-/*
- *
-                        .__           ____
-   ____   ______  ______|__|         /_   |
-  /  _ \ /  ___/ /  ___/|  |  ______  |   |
- (  <_> )\___ \  \___ \ |  | /_____/  |   |
-  \____//____  >/____  >|__|          |___|
-            \/      \/
-
-  _____ _____ ______
- |  _  /  __ \| ___ \
- | | | | /  \/| |_/ /
- | | | | |    | ___ \
- \ \_/ / \__/\| |_/ /
-  \___/ \____/\____/
-
-*  Created on: 2012. 6. 3.
-*
-*
-*/
-
-
 #include <msp430.h>
-#include "morse.h"
-#include "config.h"
-#include "24lc256.h"
-#include "pca9548a.h"
-#include "adc.h"
+#include <global.h>
 
 char message[255] = {'1','2','3','l','o',' ','o','s','s','i',' ', '1'};
 
@@ -147,29 +121,3 @@ void test_watchdog(void)
 {
 	Watchdog_External_Init();
 }
-
-int main(void) {
-
-    WDTCTL = WDTPW + WDTHOLD;                 // Stop watchdog timer
-    test_watchdog();
-
-    IO_DIRECTION(LED, OUTPUT);
-
-    three_blink();
-
-//    test_eeprom();
-//    test_tmp101();
-//    test_payload();
-//    while(1)
-//    	test_payload_with_tmp100();
-
-//    while(1) {
-//    	test_panneltemp();
-//    }
-//    test_antenner_deploy();
-    while(1)
-    	test_adc();
-
-    infinite_blink();
-}
-

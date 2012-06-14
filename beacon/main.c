@@ -27,7 +27,7 @@ int step = 10;
 
 void configure_clock() {
 	BCSCTL1 |= RSEL0 + RSEL1 + RSEL2;
-	DCOCTL = DCO0 + DCO1 + DCO2;
+	DCOCTL = DCO0 + DCO1 + DCO2; // MAX 8MHZ
 	BCSCTL2 |= SELM_0 + DIVM_0;
 }
 
@@ -36,7 +36,7 @@ int main(void) {
 	WDTCTL = WDTPW + WDTHOLD;		// Stop watchdog timer
 	P1DIR |= BIT1;					// Set P1.0 to output direction
 	// configure_clock();
-	// default 4MHZ?
+	// default 1MHZ?
 
 	adf7020_1_init();
 	adf7020_1_sendStart();

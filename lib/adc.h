@@ -34,6 +34,7 @@
 void adc_init(void);
 uint16_t adc_read(uint16_t channel);
 
-uint16_t ADC_Get_Voltage(uint8_t channel);
+uint16_t ADC_Get_Voltage_A0(uint8_t channel);
+uint16_t ADC_Get_Voltage_A1(uint8_t channel);
 
 #endif /* ADC_H_ */
