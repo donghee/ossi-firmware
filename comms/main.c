@@ -1,5 +1,5 @@
 #include <msp430.h>				
-#include "adf702x.h"
+#include "adf7020.h"
 #include "morse.h"
 
 char message[255] = {'o','s','s', 'i',' ','1',' ',' ',' ',' ',' ',' '};
@@ -17,8 +17,8 @@ int main(void) {
 	P6DIR |= 0x01;					// Set P1.0 to output direction
 //	configure_clock();
 
-	adf7020_1_init();
-	adf7020_1_sendStart();
+	ADF7020_1_Init();
+	ADF7020_1_SendStart();
 
 	for(;;) {
 		  for(i=0; i < step-1;i++ ) {

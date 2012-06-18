@@ -1,5 +1,5 @@
 #include "morse.h"
-#include "adf702x.h"
+#include "adf7020.h"
 
 //uint8_t done = 0b10000000;
 uint8_t done = 0x80;

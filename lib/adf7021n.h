@@ -1,26 +1,20 @@
 /*
- * adf702x.h
+ * adf7021n.h
  *
- *  Created on: 2012. 5. 5.
+ *  Created on: 2012. 6. 18.
  *      Author: donghee
  */
 
-#ifndef RF_H_
-#define RF_H_
+#ifndef ADF7021N_H_
+#define ADF7021N_H_
 
 #include  <msp430x16x.h>
 #include "global.h"
-
-void adf7020_1_init(void);
-void adf7020_1_sendStart(void);
-void adf7020_1_ook(uint8_t is_pa_on);
 
 void adf7021n_init(void);
 unsigned char adf7021n_get_mode(void);
 void adf7021n_sendStart(void);
 void adf7021n_recvStart(void);
-
-
 
 #define IDLE 0
 #define TX 1
@@ -43,6 +37,4 @@ void adf7021n_recvStart(void);
 #define adf702x_data       (adf702x_buf + 3)
 
 
-
-
-#endif /* RF_H_ */
+#endif /* ADF7021N_H_ */

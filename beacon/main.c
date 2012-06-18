@@ -19,8 +19,11 @@
 */
 
 #include <msp430.h>				
-#include "adf702x.h"
+#include "adf7020.h"
 #include "morse.h"
+
+#define PAON_PORT 2
+#define PAON_PIN 7
 
 char message[255] = {'o','s','s', 'i',' ','1',' ',' ',' ',' ',' ',' '};
 int step = 10;
@@ -31,6 +34,11 @@ void configure_clock() {
 	BCSCTL2 |= SELM_0 + DIVM_0;
 }
 
+void Poweramp_On() {
+	IO_DIRECTION(PAON, OUTPUT);
+	IO_SET(PAON, HIGH);
+}
+
 int main(void) {
 	volatile unsigned int i;
 	WDTCTL = WDTPW + WDTHOLD;		// Stop watchdog timer
@@ -38,8 +46,10 @@ int main(void) {
 	// configure_clock();
 	// default 1MHZ?
 
-	adf7020_1_init();
-	adf7020_1_sendStart();
+	Poweramp_On();
+
+	ADF7020_1_Init();
+	ADF7020_1_SendStart();
 
 	while(1)
 		adf7020_1_ook(1);
