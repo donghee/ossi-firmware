@@ -62,7 +62,11 @@
 #define RX_ON_PIN 3
 
 
+// crystal 19.68MHz
+// PFD 19.68MHz
 // 7021-n: 433MHz 1200kbps
+// vco bias
+
 static const uint32_t adf7021_regs[] = {
 	0x095FF380, //r0
 	0x00575011, //r1
@@ -158,6 +162,7 @@ void adf7021n_rx()
 {
 
 //	P5OUT |= BIT5;                            // CE is HIGH
+	IO_SET(TX_CE, LOW);
 	IO_SET(RX_CE, HIGH);
 //    P5DIR &= ~BIT0;
     IO_DIRECTION(RX_DATA, INPUT);
@@ -178,12 +183,12 @@ void adf7021n_rx()
 void adf7021n_tx()
 {
 //	P5OUT |= BIT5;                            // CE is HIGH
+	IO_SET(RX_CE, LOW);
 	IO_SET(TX_CE, HIGH);
 //	P5DIR |= BIT0;
     IO_DIRECTION(TX_DATA, OUTPUT);
 
 	// fill adf702x_tx_buf
-
 	adf702x_write(adf7021_regs[1], TX);
 	adf702x_write(adf7021_regs[3], TX);
 	adf702x_write(adf7021_tx_reg, TX);
@@ -200,14 +205,19 @@ unsigned char adf7021n_get_mode()
 
 void adf7021n_enable_data_interrupt()
 {
-	// RX_TXCLK is 1.2
-	  P1OUT = BIT2; //pull up
-	  P1IE |= BIT2; // interrupt enable
-	  P1IES |= BIT2; // interrupt hi/lo falling edge
-	  //P1IES &= ~BIT2; // interrupt lo/hi edge
-	  P1IFG &= ~BIT2; // P1.2 IFG cleared just in case
-}
 
+//	// RX_TXCLK is 1.2
+//	P1OUT |= BIT2; //pull up
+//	P1IE |= BIT2; // interrupt enable
+//	P1IES |= BIT2; // interrupt hi/lo falling edge
+//	P1IFG &= ~BIT2; // P1.2 IFG cleared just in case
+
+	// TX_TXCLK is 2.3
+//	P2OUT |= BIT3; //pull up
+//	P2IE |= BIT3; // interrupt enable
+//	P2IES |= BIT3; // interrupt hi/lo falling edge
+//	P2IFG &= ~BIT3; // P2.3 IFG cleared just in case
+}
 
 void adf7021n_recvStart()
 {
@@ -223,46 +233,46 @@ void adf7021n_sendStart()
 
 void adf7021n_init()
 {
-	P5DIR |= BIT0 + BIT1 + BIT3 + BIT4 + BIT5;
-
 	IO_DIRECTION(TX_DATA, OUTPUT);
 	IO_DIRECTION(TX_SCLK, OUTPUT);
 	IO_DIRECTION(TX_SDATA, OUTPUT);
 	IO_DIRECTION(TX_SLE, OUTPUT);
+	IO_DIRECTION(TX_CE, OUTPUT);
 
-
-	IO_DIRECTION(RX_DATA, OUTPUT);
+	IO_DIRECTION(RX_DATA, INPUT);
 	IO_DIRECTION(RX_SCLK, OUTPUT);
 	IO_DIRECTION(RX_SDATA, OUTPUT);
 	IO_DIRECTION(RX_SLE, OUTPUT);
+	IO_DIRECTION(RX_CE, OUTPUT);
 
 	// SCLK and SDATA pin must be LOW from start.
-	IO_SET(TX_DATA, LOW);
+//	IO_SET(TX_DATA, LOW);
 	IO_SET(TX_SCLK, LOW);
 	IO_SET(TX_SDATA, LOW);
-	IO_SET(TX_SLE, LOW);
+//	IO_SET(TX_SLE, LOW);
 
-	IO_SET(RX_DATA, LOW);
+//	IO_SET(RX_DATA, LOW);
 	IO_SET(RX_SCLK, LOW);
 	IO_SET(RX_SDATA, LOW);
-	IO_SET(RX_SLE, LOW);
+//	IO_SET(RX_SLE, LOW);
 
-	P5OUT |= BIT5;                            // CE is HIGH
+	// CE is HIGH
+	IO_SET(RX_CE, HIGH);
+	IO_SET(TX_CE, HIGH);
 }
 
 
-// Port 1 interrupt service routine
-#pragma vector=PORT1_VECTOR
-__interrupt void adf7021n_Data_TxRx_handler(void)
+// Port 2 interrupt service routine
+#pragma vector=PORT2_VECTOR
+__interrupt void adf7021n_Data_Tx_handler(void)
 {
+	P6OUT ^= BIT0;
 
 	switch (mode) {
 		case TX:
 			if(adf702x_buf[bytes_step] & (1<<bits_step)) {
-//				P5OUT |= BIT0;
 				IO_SET(TX_DATA, HIGH);
 			} else {
-//				P5OUT &= ~BIT0;
 				IO_SET(TX_DATA, LOW);
 			}
 
@@ -270,11 +280,36 @@ __interrupt void adf7021n_Data_TxRx_handler(void)
 
 			if (bits_step < 0){bits_step = 7;bytes_step++;};
 			if (bytes_step >= 15){bytes_step = 0;bits_step=7;};
+
+
 			break;
+	}
+	P2IFG &= ~BIT3; // P2.3 IFG cleared
+}
+
+// Port 1 interrupt service routine
+#pragma vector=PORT1_VECTOR
+__interrupt void adf7021n_Data_Rx_handler(void)
+{
+	switch (mode) {
+//		case TX:
+//			if(adf702x_buf[bytes_step] & (1<<bits_step)) {
+//				IO_SET(TX_DATA, HIGH);
+//			} else {
+//				IO_SET(TX_DATA, LOW);
+//			}
+//
+//			bits_step--;
+//
+//			if (bits_step < 0){bits_step = 7;bytes_step++;};
+//			if (bytes_step >= 15){bytes_step = 0;bits_step=7;};
+//
+//			P2IFG &= ~BIT3; // P2.3 IFG cleared
+//			break;
 		case RX:
 			ShiftReg = ShiftReg << 1;
 //			setShiftRegLSB(P5IN & BIT0);
-			setShiftRegLSB(P2IN & BIT4);
+			setShiftRegLSB(P1IN & BIT3);
 
 		    bits_step++;
 
@@ -296,7 +331,6 @@ __interrupt void adf7021n_Data_TxRx_handler(void)
 		    			// byte size
 		    			break;
 		    		default:
-		    			P1OUT ^= BIT1;
 		    			adf702x_rx_buf[bytes_step-4] = ShiftReg;
 		    	}
 		        if(bytes_step > 4+6){ // 6 is data length

@@ -54,11 +54,11 @@ int main(void) {
 	while(1)
 		adf7020_1_ook(1);
 
-	for(;;) {
+//	for(;;) {
 //		  for(i=0; i < step-1;i++ ) {
 //			  ascii(message[i]);
 //		  }
-	}
+//	}
 
 }
 

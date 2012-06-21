@@ -12,9 +12,10 @@
 #include "global.h"
 
 void adf7021n_init(void);
-unsigned char adf7021n_get_mode(void);
 void adf7021n_sendStart(void);
 void adf7021n_recvStart(void);
+
+unsigned char adf7021n_get_mode(void);
 
 #define IDLE 0
 #define TX 1

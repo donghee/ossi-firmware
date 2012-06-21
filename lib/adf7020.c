@@ -83,22 +83,17 @@ void spi_write(unsigned char _register)
 
 	for(i = 7; i >= 0; i--)
 	{
-//		P5OUT &= ~BIT1;                            // SCLK is low _
 		IO_SET(SCLK, LOW);
 		if(_register & (1<<i)) {
-//			P5OUT |= BIT3;                         // SDATA is high
 			IO_SET(SDATA, HIGH);
 		}
 		else {
-//			P5OUT &= ~BIT3;                        // SDATA is low
 			IO_SET(SDATA, LOW);
 		}
 		__delay_cycles(5);
-//		P5OUT |= BIT1;                             // SCLK is high _|
 		IO_SET(SCLK, HIGH);
 		__delay_cycles(15);
 	}
-//	P5OUT &= ~BIT1;                                // SCLK is low _|x|
 	IO_SET(SCLK, LOW);
 }
 
@@ -113,11 +108,9 @@ void adf702x_write(uint32_t registers)
 		spi_write(_register);
 	}
     // SLE
-//	P5OUT |= BIT4;                            // SLE high: SLE reset
 	IO_SET(SLE, HIGH);
 	__delay_cycles(10);
 	IO_SET(SDATA, LOW);                       // SDATA low
-//	P5OUT &= ~BIT4;                           // low
 	IO_SET(SLE, LOW);
 
 	__delay_cycles(30);
@@ -127,14 +120,12 @@ void adf702x_write(uint32_t registers)
 
 void ADF7020_1_Init()
 {
-//	P5DIR |= BIT0 + BIT1 + BIT3 + BIT4 + BIT5;
 	IO_DIRECTION(DATA,OUTPUT);
 	IO_DIRECTION(SCLK,OUTPUT);
 	IO_DIRECTION(SREAD,OUTPUT);
 	IO_DIRECTION(SDATA,OUTPUT);
 	IO_DIRECTION(SLE,OUTPUT);
 	IO_DIRECTION(CE,OUTPUT);
-//	P5OUT &= ~BIT0;
 
 	// SCLK and SDATA pin must be LOW from start.
 	IO_SET(DATA, LOW);
@@ -147,9 +138,7 @@ void ADF7020_1_Init()
 
 void adf7020_1_tx()
 {
-//	P5OUT |= BIT5;                            // CE is HIGH
 	IO_SET(CE, HIGH);
-//	P5DIR |= BIT0;
 	IO_DIRECTION(DATA,OUTPUT);
 	__delay_cycles(1000);
 
@@ -164,7 +153,6 @@ void adf7020_1_tx()
 
 void adf7020_1_poweramp(uint8_t is_pa_on)
 {
-//	P5OUT &= ~BIT0;
 	IO_SET(DATA, LOW);
 
 	if (is_pa_on==1) {
@@ -189,11 +177,9 @@ void ADF7020_1_SendStart()
 void adf7020_1_ook(uint8_t is_high)
 {
 	if (is_high == 1) {
-//		P5OUT |= BIT0;
 		IO_SET(DATA, HIGH);
 	}
 	else {
-//		P5OUT &= ~BIT0;
 		IO_SET(DATA, LOW);
 	}
 	mode = TX;
