@@ -66,7 +66,9 @@
 // PFD 19.68MHz
 // 7021-n: 433MHz 1200kbps
 // vco bias
-
+// Desired Deviation: 2.102kHz
+// Data Rate: 1.2 kbps
+// IF BandWidth: 18.5kHz
 static const uint32_t adf7021_regs[] = {
 	0x095FF380, //r0
 	0x00575011, //r1
@@ -161,14 +163,11 @@ void adf702x_write(uint32_t registers, unsigned char mode)
 void adf7021n_rx()
 {
 
-//	P5OUT |= BIT5;                            // CE is HIGH
 	IO_SET(TX_CE, LOW);
 	IO_SET(RX_CE, HIGH);
-//    P5DIR &= ~BIT0;
     IO_DIRECTION(RX_DATA, INPUT);
 
 	// fill adf702x_rx_buf
-
  	// r4 for 1200 bps
 	adf702x_write(adf7021_regs[1], RX);
 	adf702x_write(adf7021_regs[3], RX);
@@ -182,10 +181,8 @@ void adf7021n_rx()
 
 void adf7021n_tx()
 {
-//	P5OUT |= BIT5;                            // CE is HIGH
 	IO_SET(RX_CE, LOW);
 	IO_SET(TX_CE, HIGH);
-//	P5DIR |= BIT0;
     IO_DIRECTION(TX_DATA, OUTPUT);
 
 	// fill adf702x_tx_buf
@@ -207,7 +204,6 @@ void adf7021n_enable_data_interrupt()
 {
 
 	// RX_TXCLK is 1.2
-
  	P1OUT |= BIT2; // pull up
 	P1IE |= BIT2; // interrupt enable
 	P1IES |= BIT2; // interrupt hi/lo falling edge
@@ -218,6 +214,10 @@ void adf7021n_enable_data_interrupt()
 	P2IE |= BIT3; // interrupt enable
 	P2IES |= BIT3; // interrupt hi/lo falling edge
 	P2IFG &= ~BIT3; // P2.3 IFG cleared just in case
+
+	// data communication check!
+	P6DIR |= BIT0;
+//	IO_DIRECTION TODO: change IO_DIRECTION
 }
 
 void adf7021n_recvStart()
@@ -247,12 +247,10 @@ void adf7021n_init()
 	IO_DIRECTION(RX_CE, OUTPUT);
 
 	// SCLK and SDATA pin must be LOW from start.
-//	IO_SET(TX_DATA, LOW);
 	IO_SET(TX_SCLK, LOW);
 	IO_SET(TX_SDATA, LOW);
 //	IO_SET(TX_SLE, LOW);
 
-//	IO_SET(RX_DATA, LOW);
 	IO_SET(RX_SCLK, LOW);
 	IO_SET(RX_SDATA, LOW);
 //	IO_SET(RX_SLE, LOW);
@@ -293,20 +291,6 @@ __interrupt void adf7021n_Data_Tx_handler(void)
 __interrupt void adf7021n_Data_Rx_handler(void)
 {
 	switch (mode) {
-//		case TX:
-//			if(adf702x_buf[bytes_step] & (1<<bits_step)) {
-//				IO_SET(TX_DATA, HIGH);
-//			} else {
-//				IO_SET(TX_DATA, LOW);
-//			}
-//
-//			bits_step--;
-//
-//			if (bits_step < 0){bits_step = 7;bytes_step++;};
-//			if (bytes_step >= 15){bytes_step = 0;bits_step=7;};
-//
-//			P2IFG &= ~BIT3; // P2.3 IFG cleared
-//			break;
 		case RX:
 			ShiftReg = ShiftReg << 1;
 //			setShiftRegLSB(P5IN & BIT0);
@@ -334,11 +318,18 @@ __interrupt void adf7021n_Data_Rx_handler(void)
 		    		default:
 		    			adf702x_rx_buf[bytes_step-4] = ShiftReg;
 		    	}
+
+		    	if (bytes_step == 10) {
+	        	      P6OUT ^= BIT0;
+		    	}
+
 		        if(bytes_step > 4+6){ // 6 is data length
+                  bytes_step = 0;
 		          mode = IDLE;
 		          // CE LOW?
 		        }
 		    	bytes_step++;
+
 		    }
 		    break;
 
