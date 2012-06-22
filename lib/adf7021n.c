@@ -168,7 +168,6 @@ void adf7021n_rx()
 
 	IO_SET(TX_CE, LOW);
 	IO_SET(RX_CE, HIGH);
-    IO_DIRECTION(RX_DATA, INPUT);
 
 	// fill adf702x_rx_buf
  	// r4 for 1200 bps
@@ -186,7 +185,6 @@ void adf7021n_tx()
 {
 	IO_SET(RX_CE, LOW);
 	IO_SET(TX_CE, HIGH);
-    IO_DIRECTION(TX_DATA, OUTPUT);
 
 	// fill adf702x_tx_buf
 	adf702x_write(adf7021_regs[1], TX);
@@ -229,16 +227,22 @@ void adf7021n_recvStart()
 	adf7021n_rx();
 }
 
-void TX_PA_On()
+void TX_PA_PowerOn()
 {
     IO_DIRECTION(PA_ON, OUTPUT);
     IO_SET(PA_ON, HIGH);
 }
 
+void adf7021n_setTxPaLevel()
+{
+	// TODO: make change level.
+//	adf702x_write(adf7021_regs[2] , TX);
+}
+
 void adf7021n_sendStart()
 {
 	adf7021n_enable_data_interrupt();
-	TX_PA_On();
+	TX_PA_PowerOn();
 	adf7021n_tx();
 }
 
