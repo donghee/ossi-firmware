@@ -61,14 +61,16 @@
 #define RX_ON_PORT 4
 #define RX_ON_PIN 3
 
-
 // crystal 19.68MHz
 // PFD 19.68MHz
 // 7021-n: 433MHz 1200kbps
-// vco bias
+// vco bias: 2.75mA
+// Xtal bias: 30uA
+// PA bias: 9uA
 // Desired Deviation: 2.102kHz
 // Data Rate: 1.2 kbps
 // IF BandWidth: 18.5kHz
+// Power: 12.04dBm
 static const uint32_t adf7021_regs[] = {
 	0x095FF380, //r0
 	0x00575011, //r1
@@ -319,11 +321,8 @@ __interrupt void adf7021n_Data_Rx_handler(void)
 		    			adf702x_rx_buf[bytes_step-4] = ShiftReg;
 		    	}
 
-		    	if (bytes_step == 10) {
-	        	      P6OUT ^= BIT0;
-		    	}
-
 		        if(bytes_step > 4+6){ // 6 is data length
+	        	  P6OUT ^= BIT0;
                   bytes_step = 0;
 		          mode = IDLE;
 		          // CE LOW?
