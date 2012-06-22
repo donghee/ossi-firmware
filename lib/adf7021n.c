@@ -206,17 +206,18 @@ unsigned char adf7021n_get_mode()
 void adf7021n_enable_data_interrupt()
 {
 
-//	// RX_TXCLK is 1.2
-//	P1OUT |= BIT2; //pull up
-//	P1IE |= BIT2; // interrupt enable
-//	P1IES |= BIT2; // interrupt hi/lo falling edge
-//	P1IFG &= ~BIT2; // P1.2 IFG cleared just in case
+	// RX_TXCLK is 1.2
+
+ 	P1OUT |= BIT2; // pull up
+	P1IE |= BIT2; // interrupt enable
+	P1IES |= BIT2; // interrupt hi/lo falling edge
+	P1IFG &= ~BIT2; // P1.2 IFG cleared just in case
 
 	// TX_TXCLK is 2.3
-//	P2OUT |= BIT3; //pull up
-//	P2IE |= BIT3; // interrupt enable
-//	P2IES |= BIT3; // interrupt hi/lo falling edge
-//	P2IFG &= ~BIT3; // P2.3 IFG cleared just in case
+ 	P2OUT |= BIT3; // pull up
+	P2IE |= BIT3; // interrupt enable
+	P2IES |= BIT3; // interrupt hi/lo falling edge
+	P2IFG &= ~BIT3; // P2.3 IFG cleared just in case
 }
 
 void adf7021n_recvStart()

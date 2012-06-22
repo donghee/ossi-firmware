@@ -15,6 +15,9 @@ void adf7021n_init(void);
 void adf7021n_sendStart(void);
 void adf7021n_recvStart(void);
 
+void adf7021n_tx(void);
+void adf7021n_rx(void);
+
 unsigned char adf7021n_get_mode(void);
 
 #define IDLE 0
