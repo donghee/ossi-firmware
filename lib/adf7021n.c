@@ -29,8 +29,8 @@
 
 ///////////// TX PA
 
-#define PAON_PORT 4
-#define PAON_PIN 4
+#define PA_ON_PORT 4
+#define PA_ON_PIN 4
 
 ///////////// RX
 
@@ -74,7 +74,8 @@
 static const uint32_t adf7021_regs[] = {
 	0x095FF380, //r0
 	0x00575011, //r1
-	0x0077F082, //r2
+//	0x0077F082, //r2 // 12.04dBm: PA setting 63
+	0x0071B082, //r2 // 1dBm: PA setting 13
 	0x37160123, //r3
 	0x80293814, //r4
 	0x00003155, //r5
@@ -228,9 +229,16 @@ void adf7021n_recvStart()
 	adf7021n_rx();
 }
 
+void TX_PA_On()
+{
+    IO_DIRECTION(PA_ON, OUTPUT);
+    IO_SET(PA_ON, HIGH);
+}
+
 void adf7021n_sendStart()
 {
 	adf7021n_enable_data_interrupt();
+	TX_PA_On();
 	adf7021n_tx();
 }
 
