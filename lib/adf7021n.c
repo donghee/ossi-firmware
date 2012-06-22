@@ -279,8 +279,6 @@ void adf7021n_init()
 #pragma vector=PORT2_VECTOR
 __interrupt void adf7021n_Data_Tx_handler(void)
 {
-	P6OUT ^= BIT0;
-
 	switch (mode) {
 		case TX:
 			if(adf702x_buf[bytes_step] & (1<<bits_step)) {
@@ -292,8 +290,10 @@ __interrupt void adf7021n_Data_Tx_handler(void)
 			bits_step--;
 
 			if (bits_step < 0){bits_step = 7;bytes_step++;};
-			if (bytes_step >= 15){bytes_step = 0;bits_step=7;};
-
+			if (bytes_step >= 15){
+				bytes_step = 0; bits_step=7;
+				P6OUT ^= BIT0;
+			};
 
 			break;
 	}
