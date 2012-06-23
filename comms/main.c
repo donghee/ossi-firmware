@@ -1,5 +1,5 @@
 #include <msp430.h>				
-#include "adf7020.h"
+#include "adf7021n.h"
 #include "morse.h"
 
 char message[255] = {'o','s','s', 'i',' ','1',' ',' ',' ',' ',' ',' '};
@@ -14,17 +14,16 @@ void configure_clock() {
 int main(void) {
 	volatile unsigned int i;
 	WDTCTL = WDTPW + WDTHOLD;		// Stop watchdog timer
-	P6DIR |= 0x01;					// Set P1.0 to output direction
-//	configure_clock();
+	configure_clock();
 
-	ADF7020_1_Init();
-	ADF7020_1_SendStart();
+	adf7021n_init();
+	// Ready to Send
+	adf7021n_sendStart();
+	// Ready to Receive
+	// adf7021n_recvStart();
+	_EINT();
 
-	for(;;) {
-		  for(i=0; i < step-1;i++ ) {
-			  ascii(message[i]);
-		  }
-
-	}
+	while(1) {
+	    __delay_cycles(100000);
+     }
 }
-
